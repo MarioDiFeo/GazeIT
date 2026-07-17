@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GazeIT - Visita Culturale</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/gaze-feedback.css">
+</head>
+<body>
+
+<!-- Header con Istruzioni e Selettore Lingua -->
+<header id="app-header">
+    <!-- Sinistra: Pulsante Nascondi UI -->
+    <div class="header-left">
+        <button id="toggle-ui" class="gaze-clickable control-btn">Nascondi UI</button>
+    </div>
+
+    <!-- Centro: Titolo ridotto -->
+    <div class="header-center ui-hideable">
+        <h1>GazeIT</h1>
+        <p id="instruction-text">Soffermati per 2 secondi per interagire.</p>
+    </div>
+
+    <!-- Destra: Audio e Menù Lingua a Tendina -->
+    <div class="header-right ui-hideable">
+        <button id="toggle-audio" class="gaze-clickable control-btn">Audio: ON</button>
+
+        <!-- Menù a tendina Custom per Gaze -->
+        <div id="lang-dropdown" class="dropdown">
+            <button id="lang-dropdown-btn" class="gaze-clickable control-btn">Lingua: IT ▼</button>
+            <div id="lang-dropdown-content" class="dropdown-content hidden">
+                <button class="gaze-clickable lang-option" data-lang="it">Italiano</button>
+                <button class="gaze-clickable lang-option" data-lang="en">English</button>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Ambiente della visita virtuale -->
+<main id="virtual-environment">
+
+    <div class="artwork-target" data-id="1">
+        <img src="assets/images/placeholder1.jpg" alt="Opera 1" class="artwork-image">
+        <div class="artwork-label">Opera 1</div>
+    </div>
+
+    <div class="artwork-target" data-id="2">
+        <img src="assets/images/placeholder2.jpg" alt="Opera 2" class="artwork-image">
+        <div class="artwork-label">Opera 2</div>
+    </div>
+
+</main>
+
+<!-- Modale per le informazioni dell'opera con Audio e Sottotitoli -->
+<div id="info-modal" class="hidden">
+    <div class="modal-content">
+        <!-- Controlli superiori del modale -->
+        <div class="modal-controls">
+            <button id="close-modal" class="gaze-clickable">Chiudi / Close</button>
+        </div>
+
+        <h2 id="modal-title">Titolo Opera</h2>
+        <img id="modal-image" src="" alt="Immagine Dettaglio">
+        <p id="modal-description">Descrizione dell'opera.</p>
+
+        <!-- Player Audio (Nascosto visivamente, gestito via JS) -->
+        <audio id="audio-guide">
+            <!-- La sorgente verrà iniettata da JS, es: src="temp_audio_it.mp3" -->
+            Il tuo browser non supporta l'elemento audio.
+        </audio>
+
+        <!-- Contenitore per i sottotitoli e traduzione simultanea -->
+        <div id="subtitle-container">
+            <p id="subtitle-text">temp_text</p>
+        </div>
+    </div>
+</div>
+<button id="toggle-subtitles" class="gaze-clickable control-btn fixed-bottom-right ui-hideable">Sottotitoli: ON</button>
+<!-- Indicatore visivo del cursore/gaze -->
+<div id="gaze-cursor">
+    <div id="gaze-progress"></div>
+</div>
+
+<!-- Script JavaScript -->
+<script src="../js/mock-data.js"></script>
+<script src="../js/gaze-engine.js"></script>
+<script src="../js/app.js"></script>
+
+</body>
+</html>
+
+<! Per far funzionare tutto questo, il nostro file dei dati simulati
+dovrà contenere le stringhe tradotte e i riferimenti ai file audio. js/mock-data.js>>

@@ -1,0 +1,50 @@
+/* Nascondiamo il cursore di default per l'intera pagina */
+body {
+    cursor: none;
+}
+
+/* Il nostro cursore personalizzato per il Gaze */
+#gaze-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    pointer-events: none; /* Fondamentale: permette di "trapassare" il cursore col mouse */
+    transform: translate(-50%, -50%); /* Centra il cursore sulle coordinate */
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animazione di riempimento per il Dwell Time */
+#gaze-progress {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 152, 0, 0.8);
+    border-radius: 50%;
+    transform: scale(0); /* Di base è invisibile/vuoto */
+    transform-origin: center;
+}
+
+/* Quando JS aggiunge la classe 'gazing', parte l'animazione di 2 secondi */
+.gazing #gaze-progress {
+    transform: scale(1);
+    transition: transform 2s linear; /* Questo valore deve coincidere col timer in JS */
+}
+
+/* Feedback visivo sugli elementi interattivi quando vengono guardati */
+.artwork-target.gaze-hover {
+    border-color: #ff9800;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
+}
+
+.gaze-clickable.gaze-hover {
+    background-color: rgba(255, 152, 0, 0.8);
+    color: #fff;
+}
