@@ -2,35 +2,78 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti agli elementi del DOM (Modale)
+    const startScreen = document.getElementById('start-screen');
     const modal = document.getElementById('info-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalImage = document.getElementById('modal-image');
     const modalDesc = document.getElementById('modal-description');
 
     // Riferimenti agli elementi Multimediali
-    const audioGuide = document.getElementById('audio-guide');
-    const subtitleContainer = document.getElementById('subtitle-container');
-    const subtitleText = document.getElementById('subtitle-text');
+    const bgAudio = document.getElementById('background-audio');
 
-    // Riferimenti per i controlli dell'interfaccia
+    // NUOVI Riferimenti Sottotitoli
+    const subtitleContainer = document.getElementById('global-subtitle-container');
+    const subtitleText = document.getElementById('global-subtitle-text');
+
     const toggleUiBtn = document.getElementById('toggle-ui');
     const hideableElements = document.querySelectorAll('.ui-hideable');
     const toggleAudioBtn = document.getElementById('toggle-audio');
     const toggleSubtitlesBtn = document.getElementById('toggle-subtitles');
 
-    // Riferimenti per il menù a tendina della lingua
     const langDropdownBtn = document.getElementById('lang-dropdown-btn');
     const langDropdownContent = document.getElementById('lang-dropdown-content');
 
-    // Variabili di stato dell'interfaccia
     let isUiVisible = true;
     let isAudioOn = true;
     let areSubtitlesOn = true;
     let isDropdownOpen = false;
 
+    // --- Sblocco Audio Tramite Clic Reale sulla schermata iniziale ---
+    startScreen.addEventListener('click', () => {
+        startScreen.style.display = 'none'; // Fa sparire la schermata
+
+        bgAudio.volume = 1.0;
+        bgAudio.muted = !isAudioOn;
+        bgAudio.play().catch(error => {
+            console.error("Errore nell'avvio dell'audio:", error);
+        });
+    });
+
+    // --- MOTORE DEI SOTTOTITOLI SINCRONIZZATI ---
+    bgAudio.addEventListener('timeupdate', () => {
+        // Se i sottotitoli sono spenti o l'UI è nascosta, non fare nulla e nascondi
+        if (!areSubtitlesOn || !isUiVisible) {
+            subtitleContainer.classList.add('hidden');
+            return;
+        }
+
+        const currentTime = bgAudio.currentTime;
+
+        // Controllo di sicurezza per evitare errori se i dati non sono ancora caricati
+        if (typeof globalSubtitlesData === 'undefined') return;
+
+        const currentSubs = globalSubtitlesData[currentLanguage];
+
+        // Cerca se esiste una frase in cui il tempo attuale è compreso tra 'start' ed 'end'
+        const activeSubtitle = currentSubs.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+
+        if (activeSubtitle) {
+            subtitleText.textContent = activeSubtitle.text;
+            subtitleContainer.classList.remove('hidden');
+        } else {
+            // Se non c'è testo per questo specifico secondo, nascondi il box
+            subtitleContainer.classList.add('hidden');
+        }
+    });
+
     // Ascoltatore principale per l'evento personalizzato 'gazeClick'
     document.addEventListener('gazeClick', (e) => {
         const target = e.target;
+
+        // Sblocco Autoplay: alla prima interazione dell'utente avvia l'audio se era stato bloccato
+        if (isAudioOn && bgAudio.paused) {
+            bgAudio.play().catch(err => console.warn(err));
+        }
 
         // 1. Apertura Modale Opera
         if (target.closest('.artwork-target')) {
@@ -42,16 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target.closest('#toggle-ui')) {
             isUiVisible = !isUiVisible;
             toggleUiBtn.textContent = isUiVisible ? "Nascondi UI" : "Mostra UI";
+
             hideableElements.forEach(el => {
                 isUiVisible ? el.classList.remove('ui-hidden') : el.classList.add('ui-hidden');
             });
+
+            if (!isUiVisible) {
+                subtitleContainer.classList.add('hidden');
+            }
         }
 
-        // 3. Attiva / Disattiva Audio
+        // 3. Attiva / Disattiva Audio (Ora cambia solo il Muto, non interrompe la traccia)
         if (target.closest('#toggle-audio')) {
             isAudioOn = !isAudioOn;
             toggleAudioBtn.textContent = `Audio: ${isAudioOn ? 'ON' : 'OFF'}`;
-            audioGuide.muted = !isAudioOn;
+            bgAudio.muted = !isAudioOn;
         }
 
         // 4. Attiva / Disattiva Sottotitoli
@@ -59,9 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
             areSubtitlesOn = !areSubtitlesOn;
             toggleSubtitlesBtn.textContent = `Sottotitoli: ${areSubtitlesOn ? 'ON' : 'OFF'}`;
 
-            // Aggiorna la visibilità immediata se il modale è già aperto
-            if (!modal.classList.contains('hidden')) {
-                areSubtitlesOn ? subtitleContainer.classList.remove('hidden') : subtitleContainer.classList.add('hidden');
+            if (!areSubtitlesOn) {
+                // Nasconde forzatamente se vengono spenti
+                subtitleContainer.classList.add('hidden');
             }
         }
 
@@ -93,54 +141,58 @@ document.addEventListener('DOMContentLoaded', () => {
         // Recupera i dati da mock-data.js
         const artworkData = artworksDatabase[id];
         if (!artworkData) return;
-        const localizedData = artworkData[currentLanguage]; // currentLanguage è una variabile globale di mock-data.js
+        const localizedData = artworkData[currentLanguage];
 
         // Popola i testi e le immagini
         modalTitle.textContent = localizedData.title;
         modalImage.src = artworkData.imageSrc;
         modalDesc.textContent = localizedData.description;
-        subtitleText.textContent = localizedData.subtitleText;
-
-        // Imposta la traccia audio
-        audioGuide.src = localizedData.audioSrc;
-
-        // Gestisci la visibilità dei sottotitoli in base allo stato
-        if (areSubtitlesOn) {
-            subtitleContainer.classList.remove('hidden');
-        } else {
-            subtitleContainer.classList.add('hidden');
-        }
 
         // Mostra il modale e salva l'id corrente
         modal.classList.remove('hidden');
         modal.setAttribute('data-current-artwork', id);
-
-        // Avvia l'audio rispettando lo stato (muto o meno)
-        audioGuide.muted = !isAudioOn;
-        audioGuide.play().catch(err => {
-            console.warn("Audio fittizio non trovato o autoplay bloccato dal browser:", err);
-        });
     }
 
     // Funzione per chiudere il modale
     function closeModal() {
         modal.classList.add('hidden');
         modal.removeAttribute('data-current-artwork');
-
-        // Ferma l'audio e resetta il tempo
-        audioGuide.pause();
-        audioGuide.currentTime = 0;
     }
 
     // Funzione per gestire il cambio lingua simultaneo
     function changeLanguage(lang) {
-        currentLanguage = lang; // Aggiorna la variabile globale definita in mock-data.js
+        currentLanguage = lang;
 
-        // Se c'è un'opera aperta, ricarica i testi e gli audio in tempo reale
+        // 1. Salva il minutaggio attuale e lo stato della riproduzione
+        const savedTime = bgAudio.currentTime;
+        const wasPlaying = !bgAudio.paused;
+
+        if (typeof backgroundAudioData !== 'undefined') {
+            // 2. Cambia la sorgente del file audio
+            bgAudio.src = backgroundAudioData[lang];
+
+            // 3. Aspetta che il nuovo file sia pronto, poi ripristina il tempo
+            bgAudio.addEventListener('loadedmetadata', function restoreTime() {
+                // Se il salvataggio supera la durata del nuovo file, fallo ripartire dall'inizio
+                if (savedTime > bgAudio.duration) {
+                    bgAudio.currentTime = 0;
+                } else {
+                    bgAudio.currentTime = savedTime;
+                }
+
+                // Se l'audio stava suonando, fallo ripartire
+                if (wasPlaying) {
+                    bgAudio.play().catch(e => console.warn("Autoplay bloccato:", e));
+                }
+
+                // Rimuove l'evento per evitare conflitti ai futuri cambi lingua
+                bgAudio.removeEventListener('loadedmetadata', restoreTime);
+            });
+        }
+
+        // Se c'è un'opera aperta, ricarica solo i testi nel modale in tempo reale
         const currentArtworkId = modal.getAttribute('data-current-artwork');
         if (currentArtworkId && !modal.classList.contains('hidden')) {
-            // Ferma l'audio corrente prima di ricaricare i dati nel modale
-            audioGuide.pause();
             openModal(currentArtworkId);
         }
     }

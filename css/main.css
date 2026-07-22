@@ -254,3 +254,29 @@ body {
     opacity: 0;
     pointer-events: none; /* Disattiva le interazioni quando nascosti */
 }
+
+/* Stile dei sottotitoli globali stile film */
+.subtitle-overlay {
+    position: fixed;
+    bottom: 90px; /* Li posiziona appena sopra al pulsante Sottotitoli: ON */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 15px 20px;
+    border-radius: 8px;
+    z-index: 9000;
+    pointer-events: none; /* Impedisce al gaze di incastrarsi sui sottotitoli */
+    transition: opacity 0.2s;
+}
+
+#global-subtitle-text {
+    color: #ffeb3b; /* Giallo classico ad alto contrasto */
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    line-height: 1.4;
+}
