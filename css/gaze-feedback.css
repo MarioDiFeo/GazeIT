@@ -48,3 +48,21 @@ body {
     background-color: rgba(255, 152, 0, 0.8);
     color: #fff;
 }
+
+/* Il riempimento è completo: il target è "armato" e attende un click reale di conferma */
+.artwork-target.gaze-armed {
+    border-color: #4caf50;
+    transform: scale(1.05);
+    animation: gaze-armed-pulse 1s ease-in-out infinite;
+}
+
+.gaze-clickable.gaze-armed {
+    background-color: #4caf50;
+    color: #fff;
+    animation: gaze-armed-pulse 1s ease-in-out infinite;
+}
+
+@keyframes gaze-armed-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6); }
+    50% { box-shadow: 0 0 0 12px rgba(76, 175, 80, 0); }
+}
