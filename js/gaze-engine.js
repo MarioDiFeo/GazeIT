@@ -19,7 +19,8 @@ document.addEventListener('mousemove', (e) => {
     const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
 
     // 3. Controlla se l'elemento (o un suo genitore) è interattivo
-    const interactable = elementUnderCursor ? elementUnderCursor.closest('.artwork-target, .gaze-clickable') : null;
+    // Le opere non sono più cliccabili nella loro interezza: solo l'iconcina "i" lo è
+    const interactable = elementUnderCursor ? elementUnderCursor.closest('.gaze-clickable') : null;
 
     if (interactable) {
         // Se entriamo in un nuovo target interattivo
@@ -44,7 +45,7 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('click', (e) => {
     if (!armedTarget) return;
 
-    const clickedTarget = e.target.closest('.artwork-target, .gaze-clickable');
+    const clickedTarget = e.target.closest('.gaze-clickable');
     if (clickedTarget === armedTarget) {
         const gazeEvent = new CustomEvent('gazeClick', { bubbles: true });
         armedTarget.dispatchEvent(gazeEvent);

@@ -38,24 +38,12 @@ body {
 }
 
 /* Feedback visivo sugli elementi interattivi quando vengono guardati */
-.artwork-target.gaze-hover {
-    border-color: #ff9800;
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
-}
-
 .gaze-clickable.gaze-hover {
     background-color: rgba(255, 152, 0, 0.8);
     color: #fff;
 }
 
 /* Il riempimento è completo: il target è "armato" e attende un click reale di conferma */
-.artwork-target.gaze-armed {
-    border-color: #4caf50;
-    transform: scale(1.05);
-    animation: gaze-armed-pulse 1s ease-in-out infinite;
-}
-
 .gaze-clickable.gaze-armed {
     background-color: #4caf50;
     color: #fff;

@@ -42,19 +42,26 @@
 
 <!-- Ambiente della visita virtuale -->
 <main id="virtual-environment">
-    <div class="artwork-target" data-id="1">
-        <img src="../assets/images/placeholder1.jpg" alt="Opera 1" class="artwork-image">
-        <div class="artwork-label">Opera 1</div>
+    <!-- Ogni opera è avvolta in un wrapper posizionato: serve da ancora per il pannello descrittivo laterale -->
+    <div class="artwork-wrapper" data-id="1">
+        <div class="artwork-target" data-id="1">
+            <img src="../assets/images/placeholder1.jpg" alt="Opera 1" class="artwork-image">
+            <div class="artwork-label">Opera 1</div>
+            <button class="artwork-info-btn gaze-clickable" aria-label="Informazioni sull'opera">i</button>
+        </div>
     </div>
 
-    <div class="artwork-target" data-id="2">
-        <img src="../assets/images/placeholder2.jpg" alt="Opera 2" class="artwork-image">
-        <div class="artwork-label">Opera 2</div>
+    <div class="artwork-wrapper" data-id="2">
+        <div class="artwork-target" data-id="2">
+            <img src="../assets/images/placeholder2.jpg" alt="Opera 2" class="artwork-image">
+            <div class="artwork-label">Opera 2</div>
+            <button class="artwork-info-btn gaze-clickable" aria-label="Informazioni sull'opera">i</button>
+        </div>
     </div>
 </main>
 
-<!-- Modale per le informazioni dell'opera -->
-<div id="info-modal" class="hidden">
+<!-- Pannello con le informazioni dell'opera: viene spostato via JS accanto all'opera aperta -->
+<div id="info-modal" class="side-panel">
     <div class="modal-content">
         <div class="modal-controls">
             <button id="close-modal" class="gaze-clickable">Chiudi / Close</button>
@@ -67,6 +74,8 @@
 
     </div>
 </div>
+<!-- Piccola linea che collega il pannello allo spigolo dell'opera: separata dal pannello per non essere ritagliata dal suo overflow -->
+<div id="info-connector"></div>
 <div id="global-subtitle-container" class="subtitle-overlay hidden">
     <p id="global-subtitle-text"></p>
 </div>

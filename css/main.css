@@ -61,6 +61,11 @@ body {
     gap: 50px;
 }
 
+/* Ancora posizionata attorno all'opera: ospita il pannello descrittivo quando viene aperto accanto ad essa */
+.artwork-wrapper {
+    position: relative;
+}
+
 .artwork-target {
     position: relative;
     width: 300px;
@@ -88,31 +93,102 @@ body {
     font-size: 1.2rem;
 }
 
-/* Finestra Modale */
-#info-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+/* Iconcina "i" sullo spigolo dell'opera: unico punto che apre la scheda descrittiva */
+.artwork-info-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 5;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-#info-modal.hidden {
-    display: none;
+/* Pannello delle informazioni: viene ancorato (via JS) dentro il .artwork-wrapper dell'opera aperta,
+   e si affianca direttamente ad essa invece di occupare il bordo dello schermo */
+#info-modal {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: min(320px, 38vw);
+    background-color: rgba(30, 30, 30, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 30px 25px;
+    overflow-y: auto;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Apertura verso destra (Opera 2): il pannello sta subito a destra del suo wrapper */
+#info-modal.panel-right {
+    left: 100%;
+    margin-left: 40px;
+    transform: translateX(-15px);
+}
+
+/* Apertura verso sinistra (Opera 1): il pannello sta subito a sinistra del suo wrapper */
+#info-modal.panel-left {
+    right: 100%;
+    margin-right: 40px;
+    transform: translateX(15px);
+}
+
+#info-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+/* Piccola linea che collega il pannello allo spigolo dell'opera.
+   È un elemento a sé (figlio dello stesso .artwork-wrapper) e non un pseudo-elemento
+   del pannello, perché l'overflow-y:auto di #info-modal ritaglierebbe qualsiasi
+   contenuto posizionato al suo esterno. */
+#info-connector {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.6);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 99;
+}
+
+#info-connector.panel-right {
+    left: 100%;
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: left center;
+}
+
+#info-connector.panel-left {
+    right: 100%;
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: right center;
+}
+
+#info-connector.open {
+    opacity: 1;
+    transform: translateY(-50%) scaleX(1);
 }
 
 .modal-content {
-    background-color: #2a2a2a;
-    padding: 40px;
-    border-radius: 15px;
-    max-width: 800px;
-    width: 90%;
-    text-align: center;
+    text-align: left;
     position: relative;
 }
 
@@ -136,6 +212,11 @@ body {
     max-height: 300px;
     margin: 20px 0;
     border-radius: 8px;
+}
+
+#modal-title,
+#modal-description {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 #modal-description {

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti agli elementi del DOM (Modale)
     const startScreen = document.getElementById('start-screen');
     const modal = document.getElementById('info-modal');
+    const infoConnector = document.getElementById('info-connector');
     const modalTitle = document.getElementById('modal-title');
     const modalImage = document.getElementById('modal-image');
     const modalDesc = document.getElementById('modal-description');
@@ -148,14 +149,29 @@ document.addEventListener('DOMContentLoaded', () => {
         modalImage.src = artworkData.imageSrc;
         modalDesc.textContent = localizedData.description;
 
-        // Mostra il modale e salva l'id corrente
-        modal.classList.remove('hidden');
+        // Sposta il pannello (e la linea di collegamento) accanto all'opera selezionata:
+        // Opera 1 si apre a sinistra, Opera 2 a destra
+        const wrapper = document.querySelector(`.artwork-wrapper[data-id="${id}"]`);
+        if (wrapper) {
+            wrapper.appendChild(modal);
+            wrapper.appendChild(infoConnector);
+        }
+        const side = id === '1' ? 'panel-left' : 'panel-right';
+        modal.classList.remove('panel-left', 'panel-right');
+        modal.classList.add(side);
+        infoConnector.classList.remove('panel-left', 'panel-right');
+        infoConnector.classList.add(side);
+
+        // Mostra il pannello e salva l'id corrente
+        modal.classList.add('open');
+        infoConnector.classList.add('open');
         modal.setAttribute('data-current-artwork', id);
     }
 
-    // Funzione per chiudere il modale
+    // Funzione per chiudere il pannello laterale
     function closeModal() {
-        modal.classList.add('hidden');
+        modal.classList.remove('open');
+        infoConnector.classList.remove('open');
         modal.removeAttribute('data-current-artwork');
     }
 
@@ -192,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Se c'è un'opera aperta, ricarica solo i testi nel modale in tempo reale
         const currentArtworkId = modal.getAttribute('data-current-artwork');
-        if (currentArtworkId && !modal.classList.contains('hidden')) {
+        if (currentArtworkId && modal.classList.contains('open')) {
             openModal(currentArtworkId);
         }
     }
