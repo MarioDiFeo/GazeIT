@@ -5,6 +5,8 @@ const DWELL_TIME = 2000;
 
 let gazeTimer = null;
 let currentTarget = null;
+// Target che ha completato il riempimento dello sguardo e attende un click reale di conferma
+let armedTarget = null;
 const gazeCursor = document.getElementById('gaze-cursor');
 
 document.addEventListener('mousemove', (e) => {
@@ -22,6 +24,8 @@ document.addEventListener('mousemove', (e) => {
     if (interactable) {
         // Se entriamo in un nuovo target interattivo
         if (currentTarget !== interactable) {
+            // Se ci si allontana dal target prima di confermarlo con un click, annulla l'armamento
+            disarmTarget();
             clearGazeTimer();
             currentTarget = interactable;
             startGazeTimer(currentTarget);
@@ -32,7 +36,22 @@ document.addEventListener('mousemove', (e) => {
             clearGazeTimer();
             currentTarget = null;
         }
+        disarmTarget();
     }
+});
+
+// Il riempimento dello sguardo non conferma più l'azione da solo: serve un click reale successivo
+document.addEventListener('click', (e) => {
+    if (!armedTarget) return;
+
+    const clickedTarget = e.target.closest('.artwork-target, .gaze-clickable');
+    if (clickedTarget === armedTarget) {
+        const gazeEvent = new CustomEvent('gazeClick', { bubbles: true });
+        armedTarget.dispatchEvent(gazeEvent);
+    }
+
+    // Sia in caso di conferma che di click "a vuoto", l'armamento va consumato
+    disarmTarget();
 });
 
 function startGazeTimer(target) {
@@ -42,12 +61,10 @@ function startGazeTimer(target) {
 
     // Fa partire il conto alla rovescia di 2 secondi
     gazeTimer = setTimeout(() => {
-        // Quando il tempo scade, genera e lancia un evento personalizzato 'gazeClick'
-        const gazeEvent = new CustomEvent('gazeClick', { bubbles: true });
-        target.dispatchEvent(gazeEvent);
-
-        // Resetta l'animazione post-click per dare feedback che l'azione è avvenuta
+        // Quando il tempo scade, il target viene solo "armato": resta in attesa di un click di conferma
         clearGazeTimer();
+        armedTarget = target;
+        target.classList.add('gaze-armed');
     }, DWELL_TIME);
 }
 
@@ -60,5 +77,12 @@ function clearGazeTimer() {
     document.body.classList.remove('gazing');
     if (currentTarget) {
         currentTarget.classList.remove('gaze-hover');
+    }
+}
+
+function disarmTarget() {
+    if (armedTarget) {
+        armedTarget.classList.remove('gaze-armed');
+        armedTarget = null;
     }
 }
