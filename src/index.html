@@ -19,7 +19,17 @@
 <!-- Header con Istruzioni e Selettore Lingua -->
 <header id="app-header">
     <div class="header-left">
-        <button id="toggle-ui" class="gaze-clickable control-btn">Nascondi UI</button>
+        <button id="toggle-ui" class="gaze-clickable icon-btn" aria-label="Nascondi/Mostra interfaccia">
+            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s4-7 11-7c2.1 0 3.9.5 5.4 1.3M22 12s-1.6 2.8-4.4 4.7M12 5c7 0 11 7 11 7a18.5 18.5 0 0 1-2.6 3.4"></path>
+                <path d="M9.5 9.8a3 3 0 0 0 4.2 4.2"></path>
+                <line x1="2" y1="2" x2="22" y2="22"></line>
+            </svg>
+        </button>
     </div>
 
     <div class="header-center ui-hideable">
@@ -28,13 +38,24 @@
     </div>
 
     <div class="header-right ui-hideable">
-        <button id="toggle-audio" class="gaze-clickable control-btn">Audio: ON</button>
+        <button id="toggle-audio" class="gaze-clickable icon-btn" aria-label="Attiva/disattiva audio">
+            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
+                <path d="M16.5 8.5a5 5 0 0 1 0 7"></path>
+                <path d="M19.5 5.5a9 9 0 0 1 0 13"></path>
+            </svg>
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+            </svg>
+        </button>
 
         <div id="lang-dropdown" class="dropdown">
-            <button id="lang-dropdown-btn" class="gaze-clickable control-btn">Lingua: IT ▼</button>
+            <button id="lang-dropdown-btn" class="gaze-clickable icon-btn flag-btn flag-it" aria-label="Seleziona la lingua"></button>
             <div id="lang-dropdown-content" class="dropdown-content hidden">
-                <button class="gaze-clickable lang-option" data-lang="it">Italiano</button>
-                <button class="gaze-clickable lang-option" data-lang="en">English</button>
+                <button class="gaze-clickable icon-btn flag-btn flag-it lang-option" data-lang="it" aria-label="Italiano"></button>
+                <button class="gaze-clickable icon-btn flag-btn flag-en lang-option" data-lang="en" aria-label="English"></button>
             </div>
         </div>
     </div>
@@ -63,10 +84,6 @@
 <!-- Pannello con le informazioni dell'opera: viene spostato via JS accanto all'opera aperta -->
 <div id="info-modal" class="side-panel">
     <div class="modal-content">
-        <div class="modal-controls">
-            <button id="close-modal" class="gaze-clickable">Chiudi / Close</button>
-        </div>
-
         <h2 id="modal-title">Titolo Opera</h2>
         <img id="modal-image" src="" alt="Immagine Dettaglio">
         <p id="modal-description">Descrizione dell'opera.</p>
@@ -79,7 +96,21 @@
 <div id="global-subtitle-container" class="subtitle-overlay hidden">
     <p id="global-subtitle-text"></p>
 </div>
-<button id="toggle-subtitles" class="gaze-clickable control-btn fixed-bottom-right ui-hideable">Sottotitoli: ON</button>
+<button id="toggle-subtitles" class="gaze-clickable icon-btn fixed-bottom-right ui-hideable" aria-label="Attiva/disattiva sottotitoli">
+    <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+        <line x1="6" y1="10" x2="10" y2="10"></line>
+        <line x1="12" y1="10" x2="18" y2="10"></line>
+        <line x1="6" y1="14" x2="14" y2="14"></line>
+    </svg>
+    <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+        <line x1="6" y1="10" x2="10" y2="10"></line>
+        <line x1="12" y1="10" x2="18" y2="10"></line>
+        <line x1="6" y1="14" x2="14" y2="14"></line>
+        <line x1="2" y1="2" x2="22" y2="22"></line>
+    </svg>
+</button>
 
 <!-- Indicatore visivo del cursore/gaze -->
 <div id="gaze-cursor">

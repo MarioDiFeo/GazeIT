@@ -76,16 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
             bgAudio.play().catch(err => console.warn(err));
         }
 
-        // 1. Apertura Modale Opera
+        // 1. Apertura/Chiusura Scheda Opera: la "i" funge da interruttore, si chiude guardandola di nuovo
         if (target.closest('.artwork-target')) {
             const artworkId = target.closest('.artwork-target').getAttribute('data-id');
-            openModal(artworkId);
+            const isSameArtworkOpen = modal.classList.contains('open') && modal.getAttribute('data-current-artwork') === artworkId;
+
+            if (isSameArtworkOpen) {
+                closeModal();
+            } else {
+                openModal(artworkId);
+            }
         }
 
         // 2. Nascondi / Mostra Interfaccia (Header e altri elementi)
         if (target.closest('#toggle-ui')) {
             isUiVisible = !isUiVisible;
-            toggleUiBtn.textContent = isUiVisible ? "Nascondi UI" : "Mostra UI";
+            toggleUiBtn.classList.toggle('state-off', !isUiVisible);
 
             hideableElements.forEach(el => {
                 isUiVisible ? el.classList.remove('ui-hidden') : el.classList.add('ui-hidden');
@@ -99,14 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Attiva / Disattiva Audio (Ora cambia solo il Muto, non interrompe la traccia)
         if (target.closest('#toggle-audio')) {
             isAudioOn = !isAudioOn;
-            toggleAudioBtn.textContent = `Audio: ${isAudioOn ? 'ON' : 'OFF'}`;
+            toggleAudioBtn.classList.toggle('state-off', !isAudioOn);
             bgAudio.muted = !isAudioOn;
         }
 
         // 4. Attiva / Disattiva Sottotitoli
         if (target.closest('#toggle-subtitles')) {
             areSubtitlesOn = !areSubtitlesOn;
-            toggleSubtitlesBtn.textContent = `Sottotitoli: ${areSubtitlesOn ? 'ON' : 'OFF'}`;
+            toggleSubtitlesBtn.classList.toggle('state-off', !areSubtitlesOn);
 
             if (!areSubtitlesOn) {
                 // Nasconde forzatamente se vengono spenti
@@ -123,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 6. Selezione della Lingua dalle opzioni della tendina
         if (target.closest('.lang-option')) {
             const selectedLang = target.closest('.lang-option').getAttribute('data-lang');
-            langDropdownBtn.textContent = `Lingua: ${selectedLang.toUpperCase()} ▼`;
+            langDropdownBtn.classList.remove('flag-it', 'flag-en');
+            langDropdownBtn.classList.add(selectedLang === 'it' ? 'flag-it' : 'flag-en');
             changeLanguage(selectedLang);
 
             // Chiude la tendina dopo aver selezionato la lingua
@@ -131,10 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             langDropdownContent.classList.add('hidden');
         }
 
-        // 7. Chiusura del Modale
-        if (target.closest('#close-modal')) {
-            closeModal();
-        }
     });
 
     // Funzione per popolare e aprire il modale

@@ -192,21 +192,6 @@ body {
     position: relative;
 }
 
-.modal-controls {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-#close-modal {
-    background-color: #ff5252;
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    font-size: 1.2rem;
-    border-radius: 8px;
-}
-
 #modal-image {
     max-width: 100%;
     max-height: 300px;
@@ -287,6 +272,71 @@ body {
     cursor: none; /* Nasconde il mouse classico */
 }
 
+/* Pulsanti rotondi a icona (occhio, audio, bandiere) */
+.icon-btn {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: rgba(40, 40, 40, 0.8);
+    border: 2px solid #555;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.icon-btn svg {
+    width: 22px;
+    height: 22px;
+    display: none;
+    pointer-events: none;
+}
+
+.icon-btn .icon-on {
+    display: block;
+}
+
+.icon-btn.state-off .icon-on {
+    display: none;
+}
+
+.icon-btn.state-off .icon-off {
+    display: block;
+}
+
+/* Pulsanti lingua: il cerchietto stesso è la bandiera (nessuna emoji/testo) */
+.flag-btn {
+    background-size: cover;
+    background-position: center;
+}
+
+.flag-it {
+    background-image: linear-gradient(to right, #009246 0 33.33%, #ffffff 33.33% 66.66%, #ce2b37 66.66% 100%);
+}
+
+/* Union Jack, la bandiera del Regno Unito comunemente riconosciuta come "bandiera inglese" */
+.flag-en {
+    background-color: #00247d;
+    background-image:
+        /* croce rossa sottile (S. Giorgio) */
+        linear-gradient(to bottom, transparent calc(50% - 2px), #cf142b calc(50% - 2px), #cf142b calc(50% + 2px), transparent calc(50% + 2px)),
+        linear-gradient(to right, transparent calc(50% - 2px), #cf142b calc(50% - 2px), #cf142b calc(50% + 2px), transparent calc(50% + 2px)),
+        /* croce bianca dietro (sfondo di S. Giorgio) */
+        linear-gradient(to bottom, transparent calc(50% - 4px), #ffffff calc(50% - 4px), #ffffff calc(50% + 4px), transparent calc(50% + 4px)),
+        linear-gradient(to right, transparent calc(50% - 4px), #ffffff calc(50% - 4px), #ffffff calc(50% + 4px), transparent calc(50% + 4px)),
+        /* diagonali rosse sottilissime (S. Patrizio) */
+        linear-gradient(45deg, transparent calc(50% - 1px), #cf142b calc(50% - 1px), #cf142b calc(50% + 1px), transparent calc(50% + 1px)),
+        linear-gradient(-45deg, transparent calc(50% - 1px), #cf142b calc(50% - 1px), #cf142b calc(50% + 1px), transparent calc(50% + 1px)),
+        /* diagonali bianche (S. Andrea) */
+        linear-gradient(45deg, transparent calc(50% - 2.5px), #ffffff calc(50% - 2.5px), #ffffff calc(50% + 2.5px), transparent calc(50% + 2.5px)),
+        linear-gradient(-45deg, transparent calc(50% - 2.5px), #ffffff calc(50% - 2.5px), #ffffff calc(50% + 2.5px), transparent calc(50% + 2.5px));
+}
+
 /* Menù a Tendina Custom */
 .dropdown {
     position: relative;
@@ -296,25 +346,17 @@ body {
 .dropdown-content {
     position: absolute;
     top: 100%;
-    right: 0;
-    background-color: #2a2a2a;
-    min-width: 150px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(42, 42, 42, 0.95);
+    padding: 10px;
+    border-radius: 16px;
+    margin-top: 8px;
     box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
     z-index: 1;
-}
-
-.dropdown-content button {
-    width: 100%;
-    background: none;
-    border: none;
-    color: white;
-    padding: 15px;
-    text-align: left;
-    font-size: 1rem;
-    border-bottom: 1px solid #444;
 }
 
 /* Posizionamento pulsante Sottotitoli */

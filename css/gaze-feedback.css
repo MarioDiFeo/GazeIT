@@ -54,3 +54,21 @@ body {
     0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6); }
     50% { box-shadow: 0 0 0 12px rgba(76, 175, 80, 0); }
 }
+
+/* Le bandiere non devono cambiare colore quando vengono guardate: la Union Jack lascia
+   trasparire alcuni angoli (non è un blocco di colore pieno come il tricolore italiano),
+   quindi l'arancione/verde del feedback generico vi si vedrebbe attraverso al posto del blu */
+.flag-it.gaze-hover,
+.flag-it.gaze-armed {
+    background-color: transparent;
+}
+
+.flag-en.gaze-hover,
+.flag-en.gaze-armed {
+    background-color: #00247d;
+}
+
+/* Al posto del colore di sfondo, le bandiere segnalano lo sguardo con un anello colorato */
+.flag-btn.gaze-hover {
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.7);
+}
