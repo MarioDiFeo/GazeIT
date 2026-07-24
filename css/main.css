@@ -403,3 +403,22 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     line-height: 1.4;
 }
+/* --- STATO ATTIVO INFO POINT (Pannello informativo aperto) --- */
+.artwork-info-btn.info-btn-active {
+    background-color: rgba(255, 0, 0, 0.4) !important;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Evita che il normale effetto hover sovrascriva lo sfondo rosso mentre l'opera è selezionata */
+.artwork-info-btn.info-btn-active:hover {
+    background-color: rgba(255, 0, 0, 0.5) !important;
+}
+
+/* --- STATO NASCOSTO (Quando si disattiva l'interfaccia dall'header) --- */
+.artwork-info-btn.ui-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}

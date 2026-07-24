@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti agli elementi Multimediali
     const bgAudio = document.getElementById('background-audio');
 
-    // NUOVI Riferimenti Sottotitoli
+    // Riferimenti Sottotitoli
     const subtitleContainer = document.getElementById('global-subtitle-container');
     const subtitleText = document.getElementById('global-subtitle-text');
 
@@ -28,6 +28,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let isAudioOn = true;
     let areSubtitlesOn = true;
     let isDropdownOpen = false;
+
+    // --- Generazione di pannelli indipendenti per ogni opera ---
+    // Clona il modello di modale e connettore all'interno di ogni opera, rendendo i pop-up non mutualmente esclusivi
+    if (modal && infoConnector) {
+        document.querySelectorAll('.artwork-wrapper').forEach(wrapper => {
+            const id = wrapper.getAttribute('data-id');
+            const side = id === '1' ? 'panel-left' : 'panel-right';
+
+            const modalClone = modal.cloneNode(true);
+            const connectorClone = infoConnector.cloneNode(true);
+
+            modalClone.classList.add(side);
+            connectorClone.classList.add(side);
+
+            wrapper.appendChild(modalClone);
+            wrapper.appendChild(connectorClone);
+        });
+
+        // Rimuove i template originali vuoti dal fondo della pagina dopo averli clonati all'interno delle singole opere
+        modal.remove();
+        infoConnector.remove();
+    }
 
     // --- Sblocco Audio Tramite Clic Reale sulla schermata iniziale ---
     startScreen.addEventListener('click', () => {
@@ -76,33 +98,47 @@ document.addEventListener('DOMContentLoaded', () => {
             bgAudio.play().catch(err => console.warn(err));
         }
 
-        // 1. Apertura/Chiusura Scheda Opera: la "i" funge da interruttore, si chiude guardandola di nuovo
-        if (target.closest('.artwork-target')) {
-            const artworkId = target.closest('.artwork-target').getAttribute('data-id');
-            const isSameArtworkOpen = modal.classList.contains('open') && modal.getAttribute('data-current-artwork') === artworkId;
+       // 1. Apertura/Chiusura Scheda Opera
+       // Controlla e apre/chiude il modale specifico dell'opera, senza chiudere gli altri
+       if (target.closest('.artwork-target')) {
+           // Se l'interfaccia è nascosta, impedisci qualsiasi interazione con le opere e la riapertura dei pop-up
+           if (!isUiVisible) return;
 
-            if (isSameArtworkOpen) {
-                closeModal();
-            } else {
-                openModal(artworkId);
-            }
+           const artworkId = target.closest('.artwork-target').getAttribute('data-id');
+           const wrapper = document.querySelector(`.artwork-wrapper[data-id="${artworkId}"]`);
+           const artworkModal = wrapper ? wrapper.querySelector('.side-panel') : null;
+
+           const isSameArtworkOpen = artworkModal && artworkModal.classList.contains('open');
+
+           if (isSameArtworkOpen) {
+               closeModal(artworkId); // Chiude solo il pannello di questa specifica opera
+           } else {
+               openModal(artworkId);  // Apre il pannello senza chiudere quelli già aperti sulle altre opere
+           }
+       }
+       // 2. Nascondi / Mostra Interfaccia (Header e altri elementi)
+       if (target.closest('#toggle-ui')) {
+           isUiVisible = !isUiVisible;
+           toggleUiBtn.classList.toggle('state-off', !isUiVisible);
+
+           // Se stiamo nascondendo l'interfaccia, chiudi TUTTI i modali aperti e nascondi i sottotitoli
+           if (!isUiVisible) {
+               closeModal(); // Richiamata senza parametri, la funzione chiude tutti i pannelli contemporaneamente
+               subtitleContainer.classList.add('hidden');
+           }
+
+           // Nascondi gli elementi tradizionali ui-hideable
+           hideableElements.forEach(el => {
+               isUiVisible ? el.classList.remove('ui-hidden') : el.classList.add('ui-hidden');
+           });
+
+           // Nascondi o mostra completamente anche tutte le icone degli info point
+           document.querySelectorAll('.artwork-info-btn').forEach(btn => {
+               isUiVisible ? btn.classList.remove('ui-hidden') : btn.classList.add('ui-hidden');
+           });
         }
 
-        // 2. Nascondi / Mostra Interfaccia (Header e altri elementi)
-        if (target.closest('#toggle-ui')) {
-            isUiVisible = !isUiVisible;
-            toggleUiBtn.classList.toggle('state-off', !isUiVisible);
-
-            hideableElements.forEach(el => {
-                isUiVisible ? el.classList.remove('ui-hidden') : el.classList.add('ui-hidden');
-            });
-
-            if (!isUiVisible) {
-                subtitleContainer.classList.add('hidden');
-            }
-        }
-
-        // 3. Attiva / Disattiva Audio (Ora cambia solo il Muto, non interrompe la traccia)
+        // 3. Attiva / Disattiva Audio (cambia solo il Muto, non interrompe la traccia)
         if (target.closest('#toggle-audio')) {
             isAudioOn = !isAudioOn;
             toggleAudioBtn.classList.toggle('state-off', !isAudioOn);
@@ -141,41 +177,78 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Funzione per popolare e aprire il modale
+    // MODIFICA: Ora cerca e compila esclusivamente il pannello clonato e il connettore associati a questa specifica opera
     function openModal(id) {
         // Recupera i dati da mock-data.js
         const artworkData = artworksDatabase[id];
         if (!artworkData) return;
         const localizedData = artworkData[currentLanguage];
 
-        // Popola i testi e le immagini
-        modalTitle.textContent = localizedData.title;
-        modalImage.src = artworkData.imageSrc;
-        modalDesc.textContent = localizedData.description;
+        // Cerca il wrapper e il modale specifico di questa opera
+        const wrapper = document.querySelector(`.artwork-wrapper[data-id="${id}"]`);
+        if (!wrapper) return;
+
+        const artworkModal = wrapper.querySelector('.side-panel');
+        const artworkConnector = wrapper.querySelector('#info-connector');
+        if (!artworkModal || !artworkConnector) return;
+
+        // Popola i testi e le immagini all'interno di questo specifico pannello
+        const titleEl = artworkModal.querySelector('h2');
+        const imageEl = artworkModal.querySelector('img');
+        const descEl = artworkModal.querySelector('p');
+
+        if (titleEl) titleEl.textContent = localizedData.title;
+        if (imageEl) imageEl.src = artworkData.imageSrc;
+        if (descEl) descEl.textContent = localizedData.description;
 
         // Sposta il pannello (e la linea di collegamento) accanto all'opera selezionata:
-        // Opera 1 si apre a sinistra, Opera 2 a destra
-        const wrapper = document.querySelector(`.artwork-wrapper[data-id="${id}"]`);
-        if (wrapper) {
-            wrapper.appendChild(modal);
-            wrapper.appendChild(infoConnector);
-        }
-        const side = id === '1' ? 'panel-left' : 'panel-right';
-        modal.classList.remove('panel-left', 'panel-right');
-        modal.classList.add(side);
-        infoConnector.classList.remove('panel-left', 'panel-right');
-        infoConnector.classList.add(side);
+        // (La gestione delle classi panel-left e panel-right è già stata impostata nella fase di clonazione iniziale)
 
         // Mostra il pannello e salva l'id corrente
-        modal.classList.add('open');
-        infoConnector.classList.add('open');
-        modal.setAttribute('data-current-artwork', id);
+        artworkModal.classList.add('open');
+        artworkConnector.classList.add('open');
+        artworkModal.setAttribute('data-current-artwork', id);
+
+        // MODIFICA: Non rimuove più lo sfondo rosso dagli altri bottoni, ma applica l'attivazione SOLO al pulsante 'i' di questa opera
+        const activeBtn = wrapper.querySelector('.artwork-info-btn');
+        if (activeBtn) {
+            activeBtn.classList.add('info-btn-active');
+        }
     }
 
     // Funzione per chiudere il pannello laterale
-    function closeModal() {
-        modal.classList.remove('open');
-        infoConnector.classList.remove('open');
-        modal.removeAttribute('data-current-artwork');
+    // MODIFICA: Accetta un ID opzionale per chiudere una singola opera, oppure tutte contemporaneamente se richiamata senza parametri
+    function closeModal(id = null) {
+          if (id) {
+              // Chiude esclusivamente il pannello e il connettore dell'opera specificata
+              const wrapper = document.querySelector(`.artwork-wrapper[data-id="${id}"]`);
+              if (wrapper) {
+                  const artworkModal = wrapper.querySelector('.side-panel');
+                  const artworkConnector = wrapper.querySelector('#info-connector');
+                  if (artworkModal) {
+                      artworkModal.classList.remove('open');
+                      artworkModal.removeAttribute('data-current-artwork');
+                  }
+                  if (artworkConnector) artworkConnector.classList.remove('open');
+
+                  // Rimuove lo sfondo rosso dal bottone 'i' di questa specifica opera al momento della chiusura
+                  const btn = wrapper.querySelector('.artwork-info-btn');
+                  if (btn) btn.classList.remove('info-btn-active');
+              }
+          } else {
+              // Se non viene specificato un ID (es. chiusura forzata dal pulsante nascondi interfaccia), chiude TUTTI i pannelli aperti
+              document.querySelectorAll('.side-panel').forEach(m => {
+                  m.classList.remove('open');
+                  m.removeAttribute('data-current-artwork');
+              });
+              document.querySelectorAll('#info-connector').forEach(c => {
+                  c.classList.remove('open');
+              });
+              // Rimuove lo sfondo rosso da tutte le icone quando il pannello si chiude
+              document.querySelectorAll('.artwork-info-btn').forEach(btn => {
+                  btn.classList.remove('info-btn-active');
+              });
+          }
     }
 
     // Funzione per gestire il cambio lingua simultaneo
@@ -210,9 +283,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Se c'è un'opera aperta, ricarica solo i testi nel modale in tempo reale
-        const currentArtworkId = modal.getAttribute('data-current-artwork');
-        if (currentArtworkId && modal.classList.contains('open')) {
-            openModal(currentArtworkId);
-        }
+        // Aggiorna simultaneamente i testi in tempo reale per TUTTI i pannelli che si trovano in quel momento in stato 'open'
+        document.querySelectorAll('.side-panel.open').forEach(openModalEl => {
+            const currentArtworkId = openModalEl.getAttribute('data-current-artwork');
+            if (currentArtworkId) {
+                openModal(currentArtworkId);
+            }
+        });
     }
 });
