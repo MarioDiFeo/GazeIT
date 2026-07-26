@@ -7,7 +7,12 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1e1e1e;
+    background-image: url("../assets/images/bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* resta ferma se mai ci fosse scroll */
+    min-height: 100vh;
     color: #ffffff;
     overflow: hidden;
 }
@@ -205,9 +210,9 @@ body {
 }
 
 #modal-description {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
+    font-size: 0.97rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
 }
 
 /* Sottotitoli - Alto contrasto per accessibilità */
@@ -216,6 +221,7 @@ body {
     border-left: 5px solid #ff9800;
     padding: 15px;
     border-radius: 5px;
+    z-index: 100;
 }
 
 #subtitle-text {

@@ -38,27 +38,26 @@ const globalSubtitlesData = {
 
 const artworksDatabase = {
     "1": {
-        imageSrc: "../assets/images/placeholder1.jpg",
 
         it: {
-            title: "Opera 1 - Test Layout",
-            description: "Questa è una descrizione temporanea per la prima opera. Serve a testare l'ingombro del testo all'interno del modale durante l'interazione visiva."
+            title: "La Gioconda",
+            description: "La sua popolarità globale esplose letteralmente nell'agosto del 1911, quando l'italiano Vincenzo Peruggia la rubò nascondendola sotto il cappotto. Per due anni attirò migliaia di visitatori curiosi e i giornali di tutto il mondo ne parlarono ininterrottamente. Quando il dipinto fu ritrovato in Italia, Monna Lisa era ormai diventata la star più famosa della storia dell'arte."
         },
         en: {
-            title: "Artwork 1 - Layout Test",
-            description: "This is a temporary description for the first artwork. It is used to test text fitting inside the modal during gaze interaction."
+            title: "Monalisa",
+            description: "Her global fame truly skyrocketed in August 1911, when Italian-born Vincenzo Peruggia stole the painting by hiding it under his coat. For two years, the Louvre drew thousands of curious visitors just to see the empty space, while newspapers worldwide covered the story relentlessly. By the time the artwork was recovered in Italy, the Mona Lisa had become the most famous icon in art history."
         }
     },
     "2": {
-        imageSrc: "../assets/images/placeholder2.jpg",
+        imageSrc: "../assets/images/nike-det.jpg",
 
         it: {
-            title: "Opera 2 - Stress Test",
-            description: "Seconda descrizione di prova. Utile per verificare che il cambio di lingua aggiorni dinamicamente e correttamente l'interfaccia senza ricaricare la pagina."
+            title: "Nike di Samotracia",
+            description: "Originariamente fu ritrovata senza l'ala destra, che è stata successivamente ricostruita in gesso speculare a quella sinistra"
         },
         en: {
-            title: "Artwork 2 - Stress Test",
-            description: "Second test description. Useful to verify that language switching dynamically and correctly updates the interface without reloading the page."
+            title: "Winged Victory of Samothrace",
+            description: "Originally discovered without the right wing, it was subsequently reconstructed in plaster to mirror the left"
         }
     }
 };
