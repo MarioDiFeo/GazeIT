@@ -198,7 +198,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const descEl = artworkModal.querySelector('p');
 
         if (titleEl) titleEl.textContent = localizedData.title;
-        if (imageEl) imageEl.src = artworkData.imageSrc;
+        if (imageEl) {
+            // Se il file non esiste o non si carica, nasconde l'immagine invece di mostrare il segnaposto rotto
+            imageEl.onerror = () => imageEl.classList.add('hidden');
+            if (artworkData.imageSrc) {
+                imageEl.classList.remove('hidden');
+                imageEl.src = artworkData.imageSrc;
+            } else {
+                imageEl.removeAttribute('src');
+                imageEl.classList.add('hidden');
+            }
+        }
         if (descEl) descEl.textContent = localizedData.description;
 
         // Sposta il pannello (e la linea di collegamento) accanto all'opera selezionata:
