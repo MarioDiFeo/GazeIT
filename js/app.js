@@ -1,4 +1,4 @@
-// js/app.js
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti agli elementi del DOM (Modale)
@@ -301,4 +301,126 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Simulazione di comando vocale: tasto destro del mouse, da qualsiasi punto dello schermo ---
+    const voiceCommandPanel = document.getElementById('voice-command-panel');
+    const voiceCommandLabel = document.getElementById('voice-command-label');
+    const voiceCommandMenu = document.getElementById('voice-command-menu');
+
+    // Testi del menu vocale nella lingua corrente dell'app (la stessa usata per audio/sottotitoli/schede)
+    const voiceCommandStrings = {
+        it: {
+            listening: 'GazeIT in ascolto...',
+            openPanel: name => `Apri scheda "${name}"`,
+            closePanel: name => `Chiudi scheda "${name}"`,
+            subtitlesOn: 'Disattiva sottotitoli',
+            subtitlesOff: 'Attiva sottotitoli',
+            audioOn: 'Disattiva audio',
+            audioOff: 'Attiva audio',
+            switchLang: langName => `Cambia lingua in ${langName}`,
+            hideUi: 'Nascondi interfaccia',
+            showUi: 'Mostra interfaccia',
+            langNames: { it: 'Italiano', en: 'English' }
+        },
+        en: {
+            listening: 'GazeIT is listening...',
+            openPanel: name => `Open "${name}" panel`,
+            closePanel: name => `Close "${name}" panel`,
+            subtitlesOn: 'Turn off subtitles',
+            subtitlesOff: 'Turn on subtitles',
+            audioOn: 'Turn off audio',
+            audioOff: 'Turn on audio',
+            switchLang: langName => `Switch language to ${langName}`,
+            hideUi: 'Hide interface',
+            showUi: 'Show interface',
+            langNames: { it: 'Italian', en: 'English' }
+        }
+    };
+
+    // Simula esattamente ciò che farebbe lo sguardo: riusa l'unico gestore 'gazeClick' già esistente,
+    // così ogni voce del menu resta sempre coerente con l'azione corrispondente dell'interfaccia
+    function simulateGazeClick(el) {
+        if (!el) return;
+        el.dispatchEvent(new CustomEvent('gazeClick', { bubbles: true }));
+    }
+
+    function addVoiceCommandItem(label, onSelect) {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'voice-command-item';
+        item.textContent = label;
+        item.addEventListener('click', () => {
+            onSelect();
+            closeVoiceCommandPanel();
+        });
+        voiceCommandMenu.appendChild(item);
+    }
+
+    // Ricostruita ad ogni apertura, così le etichette (Apri/Chiudi, ON/OFF) riflettono sempre lo stato
+    // e la lingua attuali
+    function renderVoiceCommandMenu() {
+        const t = voiceCommandStrings[currentLanguage] || voiceCommandStrings.it;
+        voiceCommandLabel.textContent = t.listening;
+        voiceCommandMenu.innerHTML = '';
+
+        document.querySelectorAll('.artwork-wrapper').forEach(wrapper => {
+            const id = wrapper.getAttribute('data-id');
+            const artworkData = artworksDatabase[id];
+            // Usa il titolo localizzato dell'opera, non l'etichetta statica sotto la miniatura
+            const artworkName = artworkData ? artworkData[currentLanguage].title : `Opera ${id}`;
+            const panel = wrapper.querySelector('.side-panel');
+            const isOpen = panel && panel.classList.contains('open');
+            const infoBtn = wrapper.querySelector('.artwork-info-btn');
+
+            addVoiceCommandItem(
+                isOpen ? t.closePanel(artworkName) : t.openPanel(artworkName),
+                () => simulateGazeClick(infoBtn)
+            );
+        });
+
+        addVoiceCommandItem(
+            areSubtitlesOn ? t.subtitlesOn : t.subtitlesOff,
+            () => simulateGazeClick(toggleSubtitlesBtn)
+        );
+
+        addVoiceCommandItem(
+            isAudioOn ? t.audioOn : t.audioOff,
+            () => simulateGazeClick(toggleAudioBtn)
+        );
+
+        const otherLang = currentLanguage === 'it' ? 'en' : 'it';
+        addVoiceCommandItem(
+            t.switchLang(t.langNames[otherLang]),
+            () => simulateGazeClick(document.querySelector(`.lang-option[data-lang="${otherLang}"]`))
+        );
+
+        addVoiceCommandItem(
+            isUiVisible ? t.hideUi : t.showUi,
+            () => simulateGazeClick(toggleUiBtn)
+        );
+    }
+
+    function openVoiceCommandPanel() {
+        renderVoiceCommandMenu();
+        voiceCommandPanel.classList.remove('hidden');
+    }
+
+    function closeVoiceCommandPanel() {
+        voiceCommandPanel.classList.add('hidden');
+    }
+
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        voiceCommandPanel.classList.contains('hidden') ? openVoiceCommandPanel() : closeVoiceCommandPanel();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!voiceCommandPanel.classList.contains('hidden') && !voiceCommandPanel.contains(e.target)) {
+            closeVoiceCommandPanel();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeVoiceCommandPanel();
+    });
 });

@@ -210,9 +210,9 @@ body {
 }
 
 #modal-description {
-    font-size: 0.97rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
 }
 
 /* Sottotitoli - Alto contrasto per accessibilità */
@@ -247,9 +247,75 @@ body {
     align-items: center;
 }
 
+.header-left {
+    position: relative;
+}
+
 .header-right {
     justify-content: flex-end;
     gap: 15px; /* Spazio tra pulsante audio e lingua */
+}
+
+/* Pannello del comando vocale simulato: appare accanto all'icona dell'occhio al click destro.
+   Ancorato alla larghezza reale del pulsante (46px) e non al 100% di .header-left, che essendo
+   flex:1 si allarga ben oltre l'icona: usare 100% lo spingerebbe troppo verso il centro */
+#voice-command-panel {
+    position: absolute;
+    top: 0;
+    left: calc(46px + 15px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 200;
+}
+
+#voice-command-panel.hidden {
+    display: none;
+}
+
+#voice-command-label {
+    background-color: rgba(40, 40, 40, 0.9);
+    border: 2px solid #ff9800;
+    color: #ff9800;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+    align-self: flex-start;
+    animation: voice-command-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes voice-command-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(255, 152, 0, 0); }
+}
+
+#voice-command-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 260px;
+    background-color: rgba(30, 30, 30, 0.95);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.voice-command-item {
+    background: none;
+    border: none;
+    color: #ffffff;
+    text-align: left;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: none; /* Coerente col resto dell'app: niente cursore nativo, solo quello circolare custom */
+    transition: background-color 0.2s;
+}
+
+.voice-command-item:hover {
+    background-color: rgba(255, 152, 0, 0.3);
 }
 
 .header-center {
