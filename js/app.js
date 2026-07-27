@@ -1,4 +1,4 @@
-
+// js/app.js
 
 document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti agli elementi del DOM (Modale)
@@ -400,13 +400,21 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
+    // Chiusura automatica del menu 5 secondi dopo l'apertura, se nel frattempo non viene già chiuso
+    let voiceCommandAutoCloseTimer = null;
+
     function openVoiceCommandPanel() {
         renderVoiceCommandMenu();
         voiceCommandPanel.classList.remove('hidden');
+
+        clearTimeout(voiceCommandAutoCloseTimer);
+        voiceCommandAutoCloseTimer = setTimeout(closeVoiceCommandPanel, 5000);
     }
 
     function closeVoiceCommandPanel() {
         voiceCommandPanel.classList.add('hidden');
+        clearTimeout(voiceCommandAutoCloseTimer);
+        voiceCommandAutoCloseTimer = null;
     }
 
     document.addEventListener('contextmenu', (e) => {
