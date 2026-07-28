@@ -14,6 +14,8 @@
 <!-- SCHERMATA DI AVVIO PER SBLOCCARE L'AUDIO (Obbligatoria per i browser) -->
 <div id="start-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e1e; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;">
     <h1 style="font-size: 3rem; color: #ff9800; margin-bottom: 20px;">GazeIT</h1>
+        <p id="instruction-text">Soffermati per 2 secondi su un elemento per poterci interagire o utilizza il tasto destro per utilizzare comandi preimpostati</p>
+
     <p style="font-size: 1.5rem; color: white;">Clicca in un punto qualsiasi per avviare la visita</p>
 </div>
 
@@ -38,37 +40,37 @@
             <div id="voice-command-menu"></div>
         </div>
     </div>
+    <!--
+        <div class="header-center ui-hideable">
+            <h1>GazeIT</h1>
+            <p id="instruction-text">Soffermati per 2 secondi su un elemento per poterci interagire.</p>
+        </div>
+    -->
+        <div class="header-right ui-hideable">
+            <button id="toggle-audio" class="gaze-clickable icon-btn" aria-label="Attiva/disattiva audio">
+                <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
+                    <path d="M16.5 8.5a5 5 0 0 1 0 7"></path>
+                    <path d="M19.5 5.5a9 9 0 0 1 0 13"></path>
+                </svg>
+                <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                </svg>
+            </button>
 
-    <div class="header-center ui-hideable">
-        <h1>GazeIT</h1>
-        <p id="instruction-text">Soffermati per 2 secondi su un elemento per poterci interagire.</p>
-    </div>
-
-    <div class="header-right ui-hideable">
-        <button id="toggle-audio" class="gaze-clickable icon-btn" aria-label="Attiva/disattiva audio">
-            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
-                <path d="M16.5 8.5a5 5 0 0 1 0 7"></path>
-                <path d="M19.5 5.5a9 9 0 0 1 0 13"></path>
-            </svg>
-            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="4 9 8 9 12 5 12 19 8 15 4 15 4 9"></polygon>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-            </svg>
-        </button>
-
-        <div id="lang-dropdown" class="dropdown">
-            <button id="lang-dropdown-btn" class="gaze-clickable icon-btn flag-btn flag-it" aria-label="Seleziona la lingua"></button>
-            <div id="lang-dropdown-content" class="dropdown-content hidden">
-                <button class="gaze-clickable icon-btn flag-btn flag-it lang-option" data-lang="it" aria-label="Italiano"></button>
-                <button class="gaze-clickable icon-btn flag-btn flag-en lang-option" data-lang="en" aria-label="English"></button>
+            <div id="lang-dropdown" class="dropdown">
+                <button id="lang-dropdown-btn" class="gaze-clickable icon-btn flag-btn flag-it" aria-label="Seleziona la lingua"></button>
+                <div id="lang-dropdown-content" class="dropdown-content hidden">
+                    <button class="gaze-clickable icon-btn flag-btn flag-it lang-option" data-lang="it" aria-label="Italiano"></button>
+                    <button class="gaze-clickable icon-btn flag-btn flag-en lang-option" data-lang="en" aria-label="English"></button>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<!-- Ambiente della visita virtuale -->
+    <!-- Ambiente della visita virtuale -->
 <main id="virtual-environment">
     <!-- Ogni opera è avvolta in un wrapper posizionato: serve da ancora per il pannello descrittivo laterale -->
     <div class="artwork-wrapper" data-id="1">
