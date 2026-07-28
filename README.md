@@ -27,7 +27,11 @@ Design: L'interfaccia traduce i paper sketch iniziali applicando design pattern 
 Tecnologie: Il prototipo è stato realizzato utilizzando HTML,CSS e JavaScript per simulare il comportamento del sistema nell'ambiente AR.
 
 👥 Gruppo di Progetto
+
 🧑‍💻 Andrea Generale
+
 🧑‍💻 Mario Di Feo
+
 Nota: Questo repository ha finalità esclusivamente didattiche.
+
 La prototipazione FIGMA è disponibile al link https://www.figma.com/design/SD3CcnIB9cfG5tMFlvILRN/GazeIt?m=auto&t=NeR6WFLtawYFb77p-6
