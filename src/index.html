@@ -31,6 +31,12 @@
                 <line x1="2" y1="2" x2="22" y2="22"></line>
             </svg>
         </button>
+
+        <!-- Simulazione comando vocale: appare al click destro, in qualsiasi punto dello schermo -->
+        <div id="voice-command-panel" class="hidden">
+            <div id="voice-command-label">GazeIT in ascolto...</div>
+            <div id="voice-command-menu"></div>
+        </div>
     </div>
 
     <div class="header-center ui-hideable">
@@ -85,9 +91,10 @@
 <!-- Pannello con le informazioni dell'opera: viene spostato via JS accanto all'opera aperta -->
 <div id="info-modal" class="side-panel">
     <div class="modal-content">
-        <h2 id="modal-title">Titolo Opera</h2><br>
-        <img id="modal-image" src="" alt="">
+        <h2 id="modal-title">Titolo Opera</h2>
+        <img id="modal-image" src="" alt="Immagine Dettaglio">
         <p id="modal-description">Descrizione dell'opera.</p>
+
 
     </div>
 </div>
