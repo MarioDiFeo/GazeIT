@@ -6,7 +6,7 @@ Questo progetto è stato realizzato per il corso di Interazione Uomo Macchina (I
 
 Per poter eseguire il prototipo è necessario scaricare il progetto, aprire la cartella "src" ed eseguire il file "index.html" sul proprio browser. Una volta in esecuzione, per interagire con il sistema è prima necessario superare una pagina iniziale con delle brevi istruzioni.
 
-Superata la pagina iniziale, è possibile navigare il sistema tramite il puntatore del mouse che simula il tracciamento oculare, e soffermandosi per 2 secondi su un elemento di interfaccia, è possibile interagire con esso tramite un semplice click sinistro. 
+Superata la pagina iniziale, è possibile navigare il sistema tramite il puntatore del mouse che simula il tracciamento oculare, e soffermandosi per 2 secondi su un elemento di interfaccia, è possibile interagire con esso tramite un semplice click sinistro che simula il microgesto del "pinch". 
 
 È inoltre possibile interagire utilizzando un click destro per far apparire un menù che simula l'interazione tramite riconoscimento vocale, utilizzando frasi predefinite per comunicare le istruzioni al sistema.
 
